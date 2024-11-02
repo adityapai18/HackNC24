@@ -1,31 +1,24 @@
 import openai
-import gradio as gr
+from flask import Flask, request, jsonify
 import time
 import os
-import requests  # Import requests to make API calls
-load_dotenv()
+from dotenv import load_dotenv
 
-# Set your OpenAI API key
+# Load environment variables
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Load user data from Flask REST API
-def fetch_user_data():
-    response = requests.get("http://your-flask-api-url/user_data")  # Replace with your actual API endpoint
-    response.raise_for_status()  # Raise an error for bad responses
-    return response.json()
+# Initialize Flask app
+app = Flask(__name__)
 
-# Fetch user data from the API
-user_data = fetch_user_data()
-
-# Create a string representation of the user, goals, and transaction data for chatbot context
-def create_transaction_string():
-    user = user_data  # Since there is only one user
-    transaction_string = f"User: {user['name']} (User ID: {user['user_id']})\n"
-    transaction_string += f"Monthly Goal: ${user['goals']['monthly_goal']}\n"
-    transaction_string += f"Long-Term Goal: ${user['goals']['long_term_goal']['goal_value']} (Target Date: {user['goals']['long_term_goal']['target_date']})\n"
+# Helper function to create a transaction string for context
+def create_transaction_string(user_data):
+    transaction_string = f"User: {user_data['name']} (User ID: {user_data['user_id']})\n"
+    transaction_string += f"Monthly Goal: ${user_data['goals']['monthly_goal']}\n"
+    transaction_string += f"Long-Term Goal: ${user_data['goals']['long_term_goal']['goal_value']} (Target Date: {user_data['goals']['long_term_goal']['target_date']})\n"
     transaction_string += "Transactions:\n"
     
-    for month, transactions in user['transactions'].items():
+    for month, transactions in user_data['transactions'].items():
         transaction_string += f"  {month}:\n"
         for transaction in transactions:
             transaction_string += (
@@ -35,30 +28,39 @@ def create_transaction_string():
             )
     return transaction_string
 
-# Initialize messages for the chatbot with transaction context
-messages = [
-    {"role": "system", "content": "You are a helpful and kind AI Assistant."},
-    {"role": "system", "content": create_transaction_string()},
-]
+# Chatbot endpoint
+@app.route("/chatbot", methods=["POST"])
+def chatbot():
+    data = request.json  # Get user data from request payload
+    user_data = data.get("user_data")
+    user_input = data.get("input")
+    
+    # Validate the input
+    if not user_data or not user_input:
+        return jsonify({"error": "User data and input are required."}), 400
 
-def chatbot(input):
-    if input:
-        messages.append({"role": "user", "content": input})
-        while True:
-            try:
-                chat = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo", messages=messages
-                )
-                reply = chat.choices[0].message.content
-                messages.append({"role": "assistant", "content": reply})
-                return reply
-            except openai.error.RateLimitError:
-                print("Rate limit exceeded. Retrying in 5 seconds...")
-                time.sleep(5)  # Wait before retrying
+    # Create initial messages with the user context
+    messages = [
+        {"role": "system", "content": "You are a helpful and kind AI Assistant."},
+        {"role": "system", "content": create_transaction_string(user_data)},
+        {"role": "system", "content": "Reply in such a way that you are talking to the end user, keep it short, precise and sweet."},
+        {"role": "user", "content": user_input}
+    ]
+    
+    # Attempt the OpenAI API call
+    while True:
+        try:
+            chat = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=messages
+            )
+            reply = chat.choices[0].message.content
+            messages.append({"role": "assistant", "content": reply})
+            return jsonify({"reply": reply})
+        except openai.error.RateLimitError:
+            print("Rate limit exceeded. Retrying in 5 seconds...")
+            time.sleep(5)  # Wait before retrying
 
-# Update the inputs and outputs according to the new Gradio API
-inputs = gr.Textbox(lines=7, label="Chat with AI")
-outputs = gr.Textbox(label="Reply")
-
-gr.Interface(fn=chatbot, inputs=inputs, outputs=outputs, title="AI Chatbot",
-             description="Ask anything you want. The chatbot has context about user transactions and can provide financial help.").launch(share=True)
+# Run the Flask app
+if __name__ == "__main__":
+    app.run(debug=True)
