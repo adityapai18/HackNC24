@@ -1,0 +1,1 @@
+export const market_news_api = '81a2c49d565e4446a6eff484798fa282';
