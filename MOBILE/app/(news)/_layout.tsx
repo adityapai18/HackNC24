@@ -39,26 +39,24 @@ const apiUrl = market_news_url;
 const NewsScreen: React.FC = () => {
   const [newsData, setNewsData] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false); // State for refresh
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const fetchNews = async () => {
-    if (refreshing) return; // Prevent fetch if already refreshing
-    setLoading(true); // Start loading before fetching
+    if (refreshing) return;
+    setLoading(true);
     try {
       const response = await axios.get<ApiResponse>(apiUrl, {
         params: {
           page: page,
-          pageSize: 10, // Adjust page size as needed
+          pageSize: 10,
         },
       });
 
-      const { articles } = response.data; // Accessing the articles field
+      const { articles } = response.data;
       setNewsData((prevData) => [...prevData, ...articles]);
       setLoading(false);
-
-      // Check if there are more articles to load
       setHasMore(articles.length > 0);
     } catch (error) {
       console.error("Error fetching news:", error);
@@ -67,11 +65,11 @@ const NewsScreen: React.FC = () => {
   };
 
   const onRefresh = async () => {
-    setRefreshing(true); // Set refreshing to true
-    setPage(page + 1); // Reset to the first page
-    setNewsData([]); // Clear current news data
-    await fetchNews(); // Fetch news data
-    setRefreshing(false); // Reset refreshing state
+    setRefreshing(true);
+    setPage(page + 1);
+    setNewsData([]);
+    await fetchNews();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -98,17 +96,17 @@ const NewsScreen: React.FC = () => {
   );
 
   return (
-    <ThemedView>
+    <ThemedView style={styles.container}>
       {loading ? (
-        <ActivityIndicator size="large" color="#ffffff" />
+        <ActivityIndicator size="large" color="#000000" />
       ) : (
         <FlatList
           data={newsData}
           renderItem={renderItem}
-          keyExtractor={(item, index) => item.url + index} // Unique key for each item
+          keyExtractor={(item, index) => item.url + index}
           contentContainerStyle={styles.listContainer}
-          onRefresh={onRefresh} // Refresh on pull down
-          refreshing={refreshing} // Show refreshing indicator
+          onRefresh={onRefresh}
+          refreshing={refreshing}
         />
       )}
     </ThemedView>
@@ -116,37 +114,45 @@ const NewsScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#f5f5f5",
+  },
   listContainer: {
     padding: 8,
-    backgroundColor: "#121212", // Dark background for the list container
+    backgroundColor: "#f5f5f5",
   },
   itemContainer: {
     marginBottom: 16,
-    padding: 4,
-    backgroundColor: "#1e1e1e", // Darker item background
+    padding: 8,
+    backgroundColor: "#ffffff",
     borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
     elevation: 2,
   },
   image: {
     width: "100%",
-    height: 160,
+    height: 200, // Increased height for a larger image
     borderRadius: 8,
     marginBottom: 10,
   },
   title: {
     fontWeight: "bold",
     fontSize: 16,
-    color: "#ffffff", // Light text color for title
+    color: "#333333",
   },
   description: {
     marginTop: 5,
     fontSize: 14,
-    color: "#ffffff", // Light text color for description
+    color: "#555555",
   },
   link: {
     marginTop: 10,
-    color: "#bb86fc", // Light purple for links
-    textDecorationLine: "underline",
+    color: "#0066cc",
+    // fontWeight: "bold", // Changed to bold instead of underline
   },
 });
 
