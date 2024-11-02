@@ -1,0 +1,159 @@
+{
+    "user_id": 1,
+    "name": "John Doe",
+    "password": "securePassword123",
+    "age": 30,
+    "transactions": {
+        "November": [
+            {
+                "transaction_id": 1,
+                "amount": -150.00,
+                "date": "2024-11-01",
+                "purpose": "Groceries",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 2,
+                "amount": -200.00,
+                "date": "2024-11-02",
+                "purpose": "Utilities",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 3,
+                "amount": 300.00,
+                "date": "2024-11-03",
+                "purpose": "Salary",
+                "type": "received"
+            },
+            {
+                "transaction_id": 4,
+                "amount": -450.00,
+                "date": "2024-11-04",
+                "purpose": "Rent",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 5,
+                "amount": 100.00,
+                "date": "2024-11-05",
+                "purpose": "Freelance Work",
+                "type": "received"
+            },
+            {
+                "transaction_id": 6,
+                "amount": -250.00,
+                "date": "2024-11-06",
+                "purpose": "Dining Out",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 7,
+                "amount": -80.00,
+                "date": "2024-11-07",
+                "purpose": "Transportation",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 8,
+                "amount": -500.00,
+                "date": "2024-11-08",
+                "purpose": "Gift",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 9,
+                "amount": 320.00,
+                "date": "2024-11-09",
+                "purpose": "Bonus",
+                "type": "received"
+            },
+            {
+                "transaction_id": 10,
+                "amount": -600.00,
+                "date": "2024-11-10",
+                "purpose": "Car Maintenance",
+                "type": "spent"
+            }
+        ],
+        "December": [
+            {
+                "transaction_id": 11,
+                "amount": -400.00,
+                "date": "2024-12-01",
+                "purpose": "Groceries",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 12,
+                "amount": -300.00,
+                "date": "2024-12-02",
+                "purpose": "Utilities",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 13,
+                "amount": 500.00,
+                "date": "2024-12-03",
+                "purpose": "Salary",
+                "type": "received"
+            },
+            {
+                "transaction_id": 14,
+                "amount": -450.00,
+                "date": "2024-12-04",
+                "purpose": "Rent",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 15,
+                "amount": 200.00,
+                "date": "2024-12-05",
+                "purpose": "Freelance Work",
+                "type": "received"
+            },
+            {
+                "transaction_id": 16,
+                "amount": -300.00,
+                "date": "2024-12-06",
+                "purpose": "Dining Out",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 17,
+                "amount": -120.00,
+                "date": "2024-12-07",
+                "purpose": "Transportation",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 18,
+                "amount": -600.00,
+                "date": "2024-12-08",
+                "purpose": "Gift",
+                "type": "spent"
+            },
+            {
+                "transaction_id": 19,
+                "amount": 400.00,
+                "date": "2024-12-09",
+                "purpose": "Bonus",
+                "type": "received"
+            },
+            {
+                "transaction_id": 20,
+                "amount": -700.00,
+                "date": "2024-12-10",
+                "purpose": "Car Maintenance",
+                "type": "spent"
+            }
+        ]
+    },
+    "goals": {
+        "monthly_goal": 1200,
+        "long_term_goal": {
+            "goal_value": 20000,
+            "target_date": "2025-12-31"
+        }
+    }
+}
