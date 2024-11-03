@@ -2,11 +2,11 @@ import openai
 from flask import Flask, request, jsonify
 import time
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# load_dotenv()
+openai.api_key = "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"
 
 # Initialize Flask app
 app = Flask(__name__)
