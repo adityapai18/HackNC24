@@ -1,24 +1,35 @@
-import { db } from '../db.js'; // Import the db instance
-import { users } from '../../drizzle/schema.js'; // Import the users table schema
-import { transactions } from '../../drizzle/schema.js'; // Import the transactions table schema
+import { db } from '../db.js'; 
+import { users } from '../../drizzle/schema.js'; 
+import { transactions } from '../../drizzle/schema.js'; 
+import { eq } from "drizzle-orm"; 
 
 // Service to get all users with their transactions
 export const fetchAllUsersWithTransactions = async () => {
     try {
-        const allUsers = await db
-            .select()
-            .from(users)
-            .leftJoin(transactions, (users.id).equals(transactions.userId)) // Join transactions
-            .execute();
+        const allUsers = await db.select().from(users).innerJoin(transactions, eq(users.id, transactions.userId));
+        console.log("allusers: ", allUsers);
 
         // Process the results to format them
-        const usersWithTransactions = allUsers.reduce((acc, user) => {
-            const { id, name, email, userType, verificationStatus, amount, purpose, expenseType, timestamp } = user;
+        const usersWithTransactions = allUsers.reduce((acc, record) => {
+            const { 
+                users: {
+                    id: userId, 
+                    name, 
+                    email, 
+                    userType, 
+                    verificationStatus
+                }, 
+                transactions: {
+                    amount, 
+                    purpose, 
+                    expenseType, 
+                    timestamp
+                } 
+            } = record;
 
-            // Find or create user object in accumulator
-            if (!acc[id]) {
-                acc[id] = {
-                    user_id: id,
+            if (!acc[userId]) {
+                acc[userId] = {
+                    user_id: userId,
                     name,
                     email,
                     userType,
@@ -27,21 +38,22 @@ export const fetchAllUsersWithTransactions = async () => {
                 };
             }
 
-            // Push transaction data if it exists
-            if (amount !== null) {
-                acc[id].transactions.push({
+            // Add transaction if present
+            if (amount != null) { // Using != to cover both null and undefined
+                acc[userId].transactions.push({
                     amount,
                     purpose,
                     expenseType,
-                    date: timestamp, // Assuming timestamp is in the desired date format
+                    date: timestamp, // Assuming timestamp is in the desired format
                 });
             }
 
             return acc;
         }, {});
 
-        return Object.values(usersWithTransactions); // Convert accumulator back to array
+        return Object.values(usersWithTransactions); // Convert object back to array
     } catch (error) {
-        throw new Error("Error fetching users with transactions: " + error.message); // Error handling
+        console.error("Database query error:", error); // Log error for debugging
+        throw new Error(`Error fetching users with transactions: ${error.message}`);
     }
 };

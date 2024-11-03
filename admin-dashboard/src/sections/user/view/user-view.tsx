@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -30,21 +30,27 @@ export function UserView() {
   const table = useTable();
 
   const [filterName, setFilterName] = useState('');
+  const [users, setUsers] = useState<UserProps[]>();
 
   const dataFiltered: UserProps[] = applyFilter({
-    inputData: _users,
+    inputData: users ? users : [],
     comparator: getComparator(table.order, table.orderBy),
     filterName,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
 
+  useEffect(()=>{
+    fetchUsers();
+  }, [])
+
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_EXPRESS_BASE_URL}/users`);
+      const response = await fetch(`${import.meta.env.VITE_EXPRESS_BASE_ADMIN_URL}/allUsers`);
       const users = await response.json();
-      console.log(users);
+      console.log('users with tnx', users);
+      setUsers(users);
     } catch (error) {
       console.error("unable to fetch users", error);
     }
@@ -94,10 +100,10 @@ export function UserView() {
                 }
                 headLabel={[
                   { id: 'name', label: 'Name' },
-                  { id: 'phone-no', label: 'Phone No.' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
-                  { id: 'dob', label: 'DOB' },
+                  // { id: 'phone-no', label: 'Phone No.' },
+                  // { id: 'isVerified', label: 'Verified', align: 'center' },
+                  // { id: 'status', label: 'Status' },
+                  // { id: 'dob', label: 'DOB' },
                   { id: 'email', label: 'Email' },
                 ]}
               />
@@ -109,10 +115,10 @@ export function UserView() {
                   )
                   .map((row) => (
                     <UserTableRow
-                      key={row.id}
+                      key={row.user_id}
                       row={row}
-                      selected={table.selected.includes(row.id)}
-                      onSelectRow={() => table.onSelectRow(row.id)}
+                      selected={table.selected.includes(String(row.user_id))}
+                      onSelectRow={() => table.onSelectRow(String(row.user_id))}
                     />
                   ))}
 

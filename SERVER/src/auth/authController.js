@@ -10,6 +10,8 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
+  console.log("yaha",req.body)
+
   try {
     const { token, user } = await authService.login(req.body);
     console.log(token, user);

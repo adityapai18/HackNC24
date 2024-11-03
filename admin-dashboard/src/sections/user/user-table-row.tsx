@@ -15,16 +15,33 @@ import { Iconify } from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export type UserProps = {
-  id: string;
-  name: string;
-  status: string;
-  company: string;
-  avatarUrl: string;
-  isVerified: boolean;
-  dob: string;
-  email: string;
-};
+// export type UserProps = {
+//   user_id: string;
+//   name: string;
+//   status: string;
+//   company: string;
+//   avatarUrl: string;
+//   isVerified: boolean;
+//   dob: string;
+//   email: string;
+// };
+
+export interface UserProps {
+  user_id: number
+  name: string
+  email: string
+  userType: string
+  verificationStatus: any
+  transactions: Transaction[]
+}
+
+export interface Transaction {
+  amount: number
+  purpose?: string
+  expenseType: string
+  date: string
+}
+
 
 type UserTableRowProps = {
   row: UserProps;
@@ -53,27 +70,27 @@ export function UserTableRow({ row, selected, onSelectRow }: UserTableRowProps) 
 
         <TableCell component="th" scope="row">
           <Box gap={2} display="flex" alignItems="center">
-            <Avatar alt={row.name} src={row.avatarUrl} />
+            <Avatar alt={row.name} src={`/assets/images/avatar/avatar-${Math.floor(Math.random() * 25) + 1}.webp`} />
             {row.name}
           </Box>
         </TableCell>
 
-        <TableCell>{row.company}</TableCell>
+        {/* <TableCell>{row.company}</TableCell> */}
 
 
-        <TableCell align="center">
+        {/* <TableCell align="center">
           {row.isVerified ? (
             <Iconify width={22} icon="solar:check-circle-bold" sx={{ color: 'success.main' }} />
           ) : (
             '-'
           )}
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>
+        {/* <TableCell>
           <Label color={(row.status === 'banned' && 'error') || 'success'}>{row.status}</Label>
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell>{row.dob}</TableCell>
+        {/* <TableCell>{row.dob}</TableCell> */}
 
         <TableCell>{row.email}</TableCell>
 
