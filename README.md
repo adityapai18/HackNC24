@@ -1,7 +1,3 @@
-Here's the updated README with the RAG-BOT information merged seamlessly within the first half:
-
----
-
 # PerCent - Your Personal Finance Partner 💰
 
 Welcome to **PerCent**! Designed to guide you toward financial success, PerCent provides personalized insights, interactive features, and accessible finance education. Whether you’re budgeting for the first time or looking to optimize your financial strategy, PerCent is here to support your journey to financial independence.
