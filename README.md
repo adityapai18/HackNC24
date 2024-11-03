@@ -53,8 +53,8 @@ We have exciting plans for PerCent’s future! We aim to introduce a **Family In
 ---
 
 ## 👥 Team
-- **Frontend & UX**: [Your Name]
-- **Backend & Database**: [Teammate’s Name]
+- **Frontend & UX**: Aditya Kulkarni
+- **Backend & Database**: Aditya Pai
 
 ---
 
