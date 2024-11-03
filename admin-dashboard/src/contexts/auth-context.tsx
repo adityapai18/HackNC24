@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 const { user, token } = data;
                 setUser(user);
                 setToken(token);
-                router.push('/');  // Redirect after successful login
+                router.push('/');  // Redirect to home page on successful
             } else {
                 console.error('Login failed: Invalid credentials');
                 throw new Error('Invalid credentials');
