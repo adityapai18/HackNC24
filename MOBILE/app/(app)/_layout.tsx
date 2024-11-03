@@ -21,7 +21,7 @@ const Login = ({ navigation }: any) => {
   const router = useRouter();
   useEffect(() => {
     if (auth?.user) {
-      router.push("/home");
+      // router.push("/home");
     }
   }, [auth?.user]);
   return (
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 8,
     width: "100%",
-    color: "#fefefe",
+    // color: "#fefefe",÷
   },
   background_main: {
     width: "100%",

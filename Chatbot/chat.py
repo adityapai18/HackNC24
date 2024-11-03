@@ -35,10 +35,12 @@ def chatbot():
     user_data = data.get("user_data")
     user_input = data.get("input")
     
+    print(user_data,user_input)
     # Validate the input
     if not user_data or not user_input:
         return jsonify({"error": "User data and input are required."}), 400
 
+    print(create_transaction_string(user_data))
     # Create initial messages with the user context
     messages = [
         {"role": "system", "content": "You are a helpful and kind AI Assistant."},

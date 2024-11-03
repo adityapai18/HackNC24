@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 23,
     marginBottom: -8,
   },
   keepGoingText: {
@@ -260,19 +260,28 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   goalCard: {
-    backgroundColor: 'rgba(255, 255, 255)', // Transparent background
-    padding: 30, // Increase padding for more content spacing
-    borderRadius: 10,
-    width: Dimensions.get("window").width - 60, // Set a width to cover more screen space
-    minHeight: 200, // Increase the minimum height
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
+    paddingTop: 17,
+    backgroundColor: 'rgba(255, 255, 255,255)', // Slightly transparent background for a softer look
+    padding: 40, // Increased padding for more content spacing
+    borderRadius: 15, // Slightly rounded corners for a modern feel
+    width: Dimensions.get("window").width - 55, // Wider card to cover more screen space
+    minHeight: 220, // Increased minimum height for more content
+    // shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 }, // Deeper shadow for more depth
+    shadowOpacity: 0.5, // Slightly higher opacity for the shadow
+    shadowRadius: 12, // Increased shadow radius for a softer edge
+    elevation: 10, // Increased elevation for better elevation effect on Android
     alignItems: "center",
-    marginVertical: -8,
+    justifyContent: "center", // Center content vertically
+    marginVertical: 8, // Adjust vertical margin for better spacing
+    // borderWidth: 1, // Add border for distinction
+    borderColor: "#e0e0e0", // Light gray border color
+    overflow: "hidden", // Prevent overflow of child elements
+    position: "relative", // Set position for potential absolute positioning of inner components
+    paddingBottom: 20, // Extra padding at the bottom for content
+    marginBottom: -8 ,
   },
+
   cardTitle: {
     fontSize: 20,
     color: "#4D49BF", // Title color

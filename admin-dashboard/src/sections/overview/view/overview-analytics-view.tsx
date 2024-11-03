@@ -68,8 +68,8 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Rejected Users"
-            percent={3.6}
+            title="Unscbscribed Users "
+            percent={-1.6}
             total={234}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic-glass-message.svg" />}
@@ -95,13 +95,13 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsWebsiteVisits
-            title="Website visits"
+            title="App visits"
             subheader="(+43%) than last year"
             chart={{
               categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
               series: [
                 { name: 'Team A', data: [43, 33, 22, 37, 67, 68, 37, 24, 55] },
-                { name: 'Team B', data: [51, 70, 47, 67, 40, 37, 24, 70, 24] },
+                // { name: 'Team B', data: [51, 70, 47, 67, 40, 37, 24, 70, 24] },
               ],
             }}
           />
@@ -109,7 +109,7 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AnalyticsConversionRates
-            title="Conversion rates from visits to order"
+            title="User Conversion Rate"
             subheader="(+43%) than last year"
             chart={{
               categories: ['Oct', 'Nov',],
@@ -123,9 +123,9 @@ export function OverviewAnalyticsView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AnalyticsCurrentSubject
-            title="Current subject"
+            title="User Hits"
             chart={{
-              categories: ['AAA Bonds', 'AA Bonds', 'A Bonds', 'B Bonds'],
+              categories: ['Chatbot', 'Asset Mgt', 'Goal Setting', 'Course Selection'],
               series: [
                 { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
                 { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
@@ -136,14 +136,14 @@ export function OverviewAnalyticsView() {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AnalyticsOrderTimeline title="Order timeline" list={[...Array(5)].map((_, index) => ({
+          <AnalyticsOrderTimeline title="User Choice" list={[...Array(5)].map((_, index) => ({
             id: faker.string.uuid(),
             title: [
-              '524 Bonds Swapped',
-              '126 Bonds Created',
-              '12 Bonds Sold',
-              '21 Bonds Matured',
-              '4 Bonds Defaulted',
+              '524 Visits',
+              '126 Free Plan',
+              '12 Basic Plan',
+              '21 Premium Plan',
+              '4 Admin',
             ][index],
             type: `order${index + 1}`,
             time: faker.date.past().toISOString(),

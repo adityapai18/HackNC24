@@ -1,28 +1,84 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  KeyboardAvoidingView,
+} from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { Ionicons } from "@expo/vector-icons"; // For the arrow icon
+import axios from "axios";
+import { base_url } from "@/constants/Urls";
+import { useAppContext } from "@/lib/context";
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([
     { id: "1", text: "Hey! How can I assist you?", sender: "bot" },
   ]);
+  const auth = useAppContext();
+  const [currMessage, setCurrMessage] = useState("");
 
-  const renderMessageItem = ({ item }:any) => (
-    <ThemedView style={[styles.messageBubble, item.sender === "user" ? styles.userBubble : styles.botBubble]}>
+  const renderMessageItem = ({ item }: any) => (
+    <ThemedView
+      style={[
+        styles.messageBubble,
+        item.sender === "user" ? styles.userBubble : styles.botBubble,
+      ]}
+    >
       <ThemedText style={styles.messageText}>{item.text}</ThemedText>
     </ThemedView>
   );
 
+  const sendMessage = async () => {
+    if (!currMessage.trim()) {
+      alert("Please enter a message");
+      return;
+    }
+
+    // Append user's message to the chat
+    const userMessage = {
+      id: Date.now().toString(),
+      text: currMessage,
+      sender: "user",
+    };
+    setMessages((prevMessages) => [userMessage, ...prevMessages]);
+
+    try {
+      // Send the message to the chatbot API
+      console.log({
+        userId: auth?.user?.id,
+        input: currMessage,
+      })
+      const response = await axios.post(`${base_url}/chat/send-message`, {
+        userId: auth?.user?.id,
+        input: currMessage,
+      });
+
+      // Bot's response from the API
+      const botMessageText =
+        response.data.message || "Sorry, I couldn't respond at the moment.";
+
+      // Append bot's message to the chat
+      const botMessage = {
+        id: Date.now().toString() + "_bot",
+        text: botMessageText,
+        sender: "bot",
+      };
+      setMessages((prevMessages) => [botMessage, ...prevMessages]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      alert("Failed to send message. Please try again.");
+    } finally {
+      setCurrMessage(""); // Clear the input field
+    }
+  };
+
   return (
     <ThemedView style={styles.container}>
-      {/* Header */}
-      <ThemedView style={styles.header}>
-        <ThemedText style={styles.headerText}>Finance Advisor</ThemedText>
-      </ThemedView>
-
       {/* Chat Messages Area */}
       <FlatList
         data={messages}
@@ -35,10 +91,12 @@ const ChatScreen = () => {
       {/* Input Area */}
       <KeyboardAvoidingView behavior="padding" style={styles.inputContainer}>
         <TextInput
+          onChangeText={setCurrMessage}
+          value={currMessage}
           style={styles.input}
           placeholder="Type a message..."
         />
-        <TouchableOpacity style={styles.sendButton}>
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Ionicons name="send" size={20} color="#fff" />
         </TouchableOpacity>
       </KeyboardAvoidingView>
@@ -51,19 +109,6 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-  },
-  header: {
-    paddingVertical: 15,
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#038aff",
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
   },
   chatArea: {
     paddingHorizontal: 16,
@@ -87,6 +132,7 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 16,
+    color:'black'
   },
   inputContainer: {
     flexDirection: "row",

@@ -46,8 +46,8 @@ const _layout = () => {
       <Drawer.Screen
         name="chat" // This is the name of the page and must match the url from root
         options={{
-          drawerLabel: "Chat",
-          title: "Chat",
+          drawerLabel: "Your Advisor",
+          title: "Your Advisor",
           drawerIcon: ({ color }) => (
             <TabBarIcon name="chatbubble-ellipses-outline" color={color} />
           ),
