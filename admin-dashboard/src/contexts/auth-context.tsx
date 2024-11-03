@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     // Function to handle login, with API call
     const login = useCallback(async (adminEmail: string, adminPassword: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_EXPRESS_BASE_URL}/login`, {
+            const response = await fetch(`${import.meta.env.VITE_EXPRESS_BASE_AUTH_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
