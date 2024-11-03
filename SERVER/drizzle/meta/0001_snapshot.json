@@ -1,6 +1,6 @@
 {
-  "id": "6ccdce2a-d435-43ba-b42f-98f9772b5b1a",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ba160efe-fda5-4756-bb50-ddebc66af446",
+  "prevId": "6ccdce2a-d435-43ba-b42f-98f9772b5b1a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -459,8 +459,8 @@
       "name": "exp_type",
       "schema": "public",
       "values": [
-        "spent",
-        "received"
+        "income",
+        "expense"
       ]
     },
     "public.goal_type": {

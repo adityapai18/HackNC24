@@ -1,12 +1,20 @@
-import { Image, StyleSheet, View, Dimensions, TouchableOpacity, Text } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import React from "react";
 import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView"; // Assuming you have a themed view component
+import { ThemedView } from "@/components/ThemedView";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { LineChart } from "react-native-chart-kit"; // Import LineChart
-import { ProgressBar } from 'react-native-paper'; // Import ProgressBar
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-// import { dollar } from "@expo/vector-icons"; // Import Ionicons for the button icon
+import { LineChart } from "react-native-chart-kit";
+import { ProgressBar } from "react-native-paper";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useRouter } from "expo-router";
+import { AnimatedCircularProgress } from "react-native-circular-progress";
 
 const HomeScreen = () => {
   const user = {
@@ -15,15 +23,19 @@ const HomeScreen = () => {
     profilePicture: "https://example.com/profile.jpg",
   };
 
-  const daysLeft = 20; // Example: days left for the user's goal
-  const totalDays = 30; // Total days for the goal
+  const router = useRouter();
+  const daysLeft = 20;
+  const totalDays = 30;
+  const initialGoal = 100000;
+  const savings = 60000;
+  const progressPercentage = (savings / initialGoal) * 100;
 
   const linedata = {
     labels: Array.from({ length: 11 }, (_, i) => i * 3 + 1),
     datasets: [
       {
-        data: [20, 45, 30, 70, 99, 43, 50, 60, 30, 40, 55], // Example expenditure values for each 3-day interval
-        strokeWidth: 2, // optional
+        data: [20, 45, 30, 70, 99, 43, 50, 60, 30, 40, 55],
+        strokeWidth: 2,
       },
     ],
   };
@@ -31,37 +43,51 @@ const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <ParallaxScrollView>
-        <ThemedView style={styles.header}>
-          <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
-        </ThemedView>
+        <View style={styles.goalCard}>
+            <ThemedText style={styles.cardTitle}>Your Goal</ThemedText>
+            <ThemedText style={styles.largeNumber}>$60000</ThemedText>
+            <ThemedText style={styles.smallNumber}>Out of $100000</ThemedText>
+          </View>
 
-        <ThemedText style={styles.largeNumber}>60000</ThemedText>
-        <ThemedText></ThemedText>
-        <ThemedText></ThemedText>
-
-        {/* Progress Bar */}
-        <ProgressBar
-          progress={daysLeft / totalDays} // Calculate the progress
-          color="#2196F3" // Changed to blue color
-          style={styles.progressBar}
-        />
-
-        <ThemedText style={styles.motivationalText}>Keep going {totalDays - daysLeft} days left!!</ThemedText>
+        <View style={styles.progressContainer}>
+          <ThemedText style={styles.keepGoingText}>Keep going {daysLeft} days to go!!</ThemedText>
+          <AnimatedCircularProgress
+            size={80}
+            width={10}
+            fill={progressPercentage}
+            tintColor="#5576D9"
+            backgroundColor="#BBC3F2"
+            lineCap="round"
+          >
+            {(fill) => (
+              <Text style={styles.progressText}>
+                {Math.round(fill)}%
+              </Text>
+            )}
+          </AnimatedCircularProgress>
+        </View>
 
         <View style={styles.expenditureSection}>
+          <TouchableOpacity
+            style={styles.insightsCard}
+            onPress={() => console.log("Navigate to personalized insights")}
+          >
+            <Text style={styles.insightsText}>
+              Tap for personalized expenditure insights            
+            </Text>
+          </TouchableOpacity>
           <ThemedText style={styles.sectionTitle}>Your Expenditure</ThemedText>
 
-          {/* Bezier Line Chart Implementation */}
           <LineChart
             data={linedata}
-            width={Dimensions.get('window').width - 40} // Adjust width for padding
+            width={Dimensions.get("window").width - 40}
             height={220}
-            yAxisLabel={'$'}
+            yAxisLabel={"$"}
             chartConfig={{
-              backgroundColor: '#e26a00',
-              backgroundGradientFrom: '#2196F3', // Changed to blue gradient
-              backgroundGradientTo: '#64B5F6', // Changed to a lighter blue gradient
-              decimalPlaces: 2, // optional, defaults to 2dp
+              backgroundColor: "#4D49BF",
+              backgroundGradientFrom: "#2924A6",
+              backgroundGradientTo: "#5576D9",
+              decimalPlaces: 2,
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               style: {
                 borderRadius: 16,
@@ -77,10 +103,22 @@ const HomeScreen = () => {
         </View>
       </ParallaxScrollView>
 
-      {/* Circular Button */}
-      <TouchableOpacity style={styles.circularButton}>
+      {/* Add Expense Button */}
+      <TouchableOpacity
+        style={styles.circularButton}
+        onPress={() => router.push("/home/expense")}
+      >
         <FontAwesome name="dollar" size={20} color="white" />
         <Text style={styles.buttonText}>Add Expense</Text>
+      </TouchableOpacity>
+
+      {/* My Goals Button */}
+      <TouchableOpacity
+        style={styles.myGoalsButton}
+        onPress={() => router.push("/home/goals")}
+      >
+        <FontAwesome name="flag" size={20} color="white" />
+        <Text style={styles.buttonText}>My Goals</Text>
       </TouchableOpacity>
     </View>
   );
@@ -94,15 +132,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     alignItems: "center",
+    backgroundColor: "#4D49BF",
   },
   username: {
     fontSize: 15,
     fontWeight: "bold",
+    color: "#EBEBF2", // light gray
   },
   profilePicture: {
-    width: 20,
-    height: 20,
-    borderRadius: 25,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   largeNumber: {
     paddingTop: 50,
@@ -110,40 +150,63 @@ const styles = StyleSheet.create({
     textAlign: "left",
     paddingLeft: 5,
     marginTop: 10,
+    fontWeight: "bold",
+    color: "#007CC3", // dark blue
+  },
+  smallNumber: {
+    fontWeight: "bold",
+    color: "#5576D9", // accent blue
+  },
+  progressContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    paddingHorizontal: 20,
+    marginTop: 20,
+    marginBottom: -8,
+  },
+  keepGoingText: {
+    fontSize: 16,
+    // fontWeight: "bold",
+    color: "#5576D9", // accent blue
+  },
+  progressText: {
+    fontSize: 16,
+    color: "#4D49BF", // primary dark blue
+    fontWeight: "bold",
   },
   motivationalText: {
     fontSize: 16,
     textAlign: "center",
     marginBottom: 20,
+    color: "#4D49BF",
   },
   expenditureSection: {
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
   sectionTitle: {
+    marginVertical: 10,
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
     marginLeft: -25,
-  },
-  chartTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
+    color: "#2924A6", // dark blue
   },
   progressBar: {
     marginVertical: 5,
     height: 10,
     borderRadius: 10,
+    backgroundColor: "#BBC3F2", // light complementary blue
   },
   circularButton: {
     position: "absolute",
     bottom: 20,
-    right: 20, // Positioning to the bottom right
-    width: 150, // Increased width for text
-    height: 50, // Increased height for text
+    right: 20,
+    width: 150,
+    height: 50,
     borderRadius: 25,
-    backgroundColor: "#038aff",
+    backgroundColor: "#4D49BF", // primary button blue
     alignItems: "center",
     justifyContent: "center",
     elevation: 5,
@@ -151,13 +214,69 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
-    zIndex: 10,
-    flexDirection: "row", // Arrange items in a row
+    flexDirection: "row",
+  },
+  myGoalsButton: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    width: 150,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#5576D9", // secondary button blue
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    flexDirection: "row",
   },
   buttonText: {
-    color: "#fff",
+    color: "#EBEBF2", // light gray text for contrast
     fontSize: 16,
-    marginLeft: 10, // Space between icon and text
-    textAlign: "center", // Center the text vertically
+    marginLeft: 10,
+    textAlign: "center",
   },
+  insightsCard: {
+    backgroundColor: "#5576D9", // Card background color
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 15,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    marginTop: 20,
+    marginHorizontal: -25,
+    width: Dimensions.get("window").width - 50,
+  },
+  insightsText: {
+    color: "#EBEBF2", // Light text color for contrast
+    fontSize: 16,
+    textAlign: "center",
+  },
+  goalCard: {
+    backgroundColor: 'rgba(255, 255, 255)', // Transparent background
+    padding: 30, // Increase padding for more content spacing
+    borderRadius: 10,
+    width: Dimensions.get("window").width - 60, // Set a width to cover more screen space
+    minHeight: 200, // Increase the minimum height
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 10,
+    alignItems: "center",
+    marginVertical: -8,
+  },
+  cardTitle: {
+    fontSize: 20,
+    color: "#4D49BF", // Title color
+    fontWeight: "bold",
+  },
+  
 });

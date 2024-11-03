@@ -6,6 +6,7 @@ import {
   serial,
   boolean,
   pgEnum,
+  date
 } from "drizzle-orm/pg-core";
 
 export const userTypeEnum = pgEnum("user_type", ["admin", "normal"]);
@@ -15,7 +16,7 @@ export const verificationEnum = pgEnum("verification_status", [
   "fail",
   "waiting"
 ]);
-export const expenseTypeEnum = pgEnum("expense_type", ["spent", "received"]);
+export const expenseTypeEnum = pgEnum("exp_type", ["income", "expense"]);
 export const senderType = pgEnum("sender_type", ["user", "bot"]);
 export const tokenTypeEnum = pgEnum("token_type", [
   "access",
@@ -23,9 +24,8 @@ export const tokenTypeEnum = pgEnum("token_type", [
   "password_reset",
 ]);
 export const goalType = pgEnum("goal_type", [
-  "access",
-  "refresh",
-  "password_reset",
+  'long_term',
+  'short_term'
 ]);
 
 export const users = pgTable("users", {
@@ -66,7 +66,7 @@ export const transactions = pgTable("transactions", {
   timestamp: timestamp("timestamp").defaultNow(),
   amount: integer("amount").notNull(),
   purpose: text("purpose"),
-  expenseType: text("expense_type").notNull(),
+  expenseType: expenseTypeEnum("exp_type"),
 });
 
 export const userGoals = pgTable("user_goals", {
@@ -77,6 +77,7 @@ export const userGoals = pgTable("user_goals", {
   goalType: goalType("goal_type"),
   success: boolean("success"),
   amount: integer("amount").notNull(),
+  goalDeadline:date().defaultNow(),
   reward: text("reward"),
 });
 

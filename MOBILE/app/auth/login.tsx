@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Image,
 } from "react-native";
 import React from "react";
 import { Formik } from "formik";
@@ -14,12 +15,22 @@ import { ThemedText } from "@/components/ThemedText";
 import axios from "axios";
 import { base_url } from "@/constants/Urls";
 import { useRouter } from "expo-router";
+
 const Login = ({ navigation }: any) => {
   const auth = useAppContext();
   const router = useRouter();
+
   return (
-    <ThemedView style={styles.background_main}>
-      <>
+    <View style={styles.mainContainer}>
+      {/* Logo Outside of ThemedView */}
+      <Image
+        source={require("@/assets/images/percent_logo.png")} // Path to your logo file
+        style={styles.logo}
+        // resizeMode="contain"
+      />
+
+      {/* Main Content */}
+      <ThemedView style={styles.background_main}>
         <Formik
           initialValues={{
             id: "",
@@ -63,7 +74,7 @@ const Login = ({ navigation }: any) => {
                   fontSize: 14,
                 }}
               >
-                Dont Have an Account ?
+                Don't Have an Account?
                 <ThemedText
                   style={{ color: "cyan" }}
                   onPress={() => {
@@ -99,14 +110,27 @@ const Login = ({ navigation }: any) => {
             </ThemedView>
           )}
         </Formik>
-      </>
-    </ThemedView>
+      </ThemedView>
+    </View>
   );
 };
 
 export default Login;
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 10,
+    backgroundColor: "white"
+    
+  },
+  logo: {
+    width: 300, // Adjust width as needed
+    height: 200, // Adjust height as needed
+    marginBottom: 20,
+  },
   container: {
     justifyContent: "flex-start",
     alignItems: "center",
@@ -120,7 +144,7 @@ const styles = StyleSheet.create({
     width: "99%",
     borderWidth: 1,
     borderColor: "#aea0ae",
-    borderRadius: 5,
+    borderRadius: 15,
     alignItems: "center",
     paddingVertical: 8,
   },
@@ -131,9 +155,8 @@ const styles = StyleSheet.create({
     color: "#fefefe",
   },
   background_main: {
-    flex: 1,
+    width: "100%",
     paddingBottom: 8,
     paddingHorizontal: 10,
-    justifyContent: "center",
   },
 });

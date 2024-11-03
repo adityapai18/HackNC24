@@ -4,7 +4,7 @@ import { Drawer } from "expo-router/drawer";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { useColorScheme } from "@/hooks/useColorScheme";
 const _layout = () => {
-    const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme();
 
   return (
     <Drawer
@@ -50,6 +50,28 @@ const _layout = () => {
           title: "Chat",
           drawerIcon: ({ color }) => (
             <TabBarIcon name="chatbubble-ellipses-outline" color={color} />
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="expense" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "Expense",
+          title: "Expense",
+          drawerIcon: ({ color }) => (
+            <TabBarIcon name="cash-outline" color={color} />
+          ),
+        }}
+      />
+
+      <Drawer.Screen
+        name="goals" // This is the name of the page and must match the url from root
+        options={{
+          drawerLabel: "Your Goals",
+          title: "Your Goals",
+          drawerIcon: ({ color }) => (
+            <TabBarIcon name="flag-outline" color={color} />
           ),
         }}
       />

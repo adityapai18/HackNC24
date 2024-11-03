@@ -1,6 +1,6 @@
 {
-  "id": "6ccdce2a-d435-43ba-b42f-98f9772b5b1a",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f234988c-311b-4ce5-a2b4-58339c7e2e2f",
+  "prevId": "0c8ec72a-7077-4d54-9579-062b65d165aa",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -364,6 +364,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "goalDeadline": {
+          "name": "goalDeadline",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
         "reward": {
           "name": "reward",
           "type": "text",
@@ -459,17 +466,16 @@
       "name": "exp_type",
       "schema": "public",
       "values": [
-        "spent",
-        "received"
+        "income",
+        "expense"
       ]
     },
     "public.goal_type": {
       "name": "goal_type",
       "schema": "public",
       "values": [
-        "access",
-        "refresh",
-        "password_reset"
+        "long_term",
+        "short_term"
       ]
     },
     "public.sender_type": {

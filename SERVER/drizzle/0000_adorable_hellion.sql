@@ -1,9 +1,9 @@
-CREATE TYPE "public"."expense_type" AS ENUM('spent', 'received');--> statement-breakpoint
+CREATE TYPE "public"."exp_type" AS ENUM('spent', 'received');--> statement-breakpoint
 CREATE TYPE "public"."goal_type" AS ENUM('access', 'refresh', 'password_reset');--> statement-breakpoint
 CREATE TYPE "public"."sender_type" AS ENUM('user', 'bot');--> statement-breakpoint
 CREATE TYPE "public"."token_type" AS ENUM('access', 'refresh', 'password_reset');--> statement-breakpoint
 CREATE TYPE "public"."user_type" AS ENUM('admin', 'normal');--> statement-breakpoint
-CREATE TYPE "public"."verification_status" AS ENUM('banned', 'pass', 'fail');--> statement-breakpoint
+CREATE TYPE "public"."verification_status" AS ENUM('banned', 'pass', 'fail', 'waiting');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "auth" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" integer NOT NULL,
@@ -37,7 +37,14 @@ CREATE TABLE IF NOT EXISTS "transactions" (
 	"timestamp" timestamp DEFAULT now(),
 	"amount" integer NOT NULL,
 	"purpose" text,
-	"expense_type" text NOT NULL
+	"exp_type" "exp_type"
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "user_docs" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" integer NOT NULL,
+	"identity_doc" text NOT NULL,
+	"account_doc" text NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "user_goals" (
@@ -55,7 +62,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"email" text NOT NULL,
 	"user_enum" "user_type",
 	"password" text NOT NULL,
-	"verification_status" "verification_status",
+	"verification_status" "verification_status" DEFAULT 'waiting',
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -85,6 +92,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "user_docs" ADD CONSTRAINT "user_docs_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
