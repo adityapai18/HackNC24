@@ -8,13 +8,15 @@ import {
 } from "react-native";
 import React from "react";
 import { Formik } from "formik";
-import { useAppContext } from "../../context";
+import { useAppContext } from "@/lib/context";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import axios from "axios";
 import { base_url } from "@/constants/Urls";
+import { useRouter } from "expo-router";
 const Login = ({ navigation }: any) => {
   const auth = useAppContext();
+  const router = useRouter();
   return (
     <ThemedView style={styles.background_main}>
       <>
@@ -23,8 +25,11 @@ const Login = ({ navigation }: any) => {
             id: "",
             pass: "",
           }}
-          onSubmit={(values) => {
-            auth?.login(values.id, values.pass);
+          onSubmit={async (values) => {
+            const res = await auth?.login(values.id, values.pass);
+            if (res && res.id) {
+              router.push("/home");
+            }
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -62,7 +67,7 @@ const Login = ({ navigation }: any) => {
                 <ThemedText
                   style={{ color: "cyan" }}
                   onPress={() => {
-                    navigation.navigate("(signup)");
+                    router.push("/auth/signup");
                   }}
                 >
                   {"  "}Sign Up

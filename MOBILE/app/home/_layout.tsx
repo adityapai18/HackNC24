@@ -2,8 +2,10 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Drawer } from "expo-router/drawer";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import { useColorScheme } from "@/hooks/useColorScheme";
+const _layout = () => {
+    const colorScheme = useColorScheme();
 
-const AppStack = ({ colorScheme }: { colorScheme: string }) => {
   return (
     <Drawer
       screenOptions={{
@@ -11,7 +13,7 @@ const AppStack = ({ colorScheme }: { colorScheme: string }) => {
       }}
     >
       <Drawer.Screen
-        name="(home)" // This is the name of the page and must match the url from root
+        name="index" // This is the name of the page and must match the url from root
         options={{
           drawerLabel: "Home",
           title: "Home",
@@ -20,7 +22,7 @@ const AppStack = ({ colorScheme }: { colorScheme: string }) => {
       />
 
       <Drawer.Screen
-        name="(news)" // This is the name of the page and must match the url from root
+        name="news" // This is the name of the page and must match the url from root
         options={{
           drawerLabel: "News",
           title: "News",
@@ -42,7 +44,7 @@ const AppStack = ({ colorScheme }: { colorScheme: string }) => {
       />
 
       <Drawer.Screen
-        name="(chat)" // This is the name of the page and must match the url from root
+        name="chat" // This is the name of the page and must match the url from root
         options={{
           drawerLabel: "Chat",
           title: "Chat",
@@ -55,6 +57,6 @@ const AppStack = ({ colorScheme }: { colorScheme: string }) => {
   );
 };
 
-export default AppStack;
+export default _layout;
 
 const styles = StyleSheet.create({});

@@ -6,14 +6,22 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { ThemedView } from "@/components/ThemedView";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
-import { useAppContext } from "../../context";
+import { useAppContext } from "@/lib/context";
+import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-
-const Signup = ({ navigation }: any) => {
+import axios from "axios";
+import { base_url } from "@/constants/Urls";
+import { useRouter } from "expo-router";
+const Login = ({ navigation }: any) => {
   const auth = useAppContext();
+  const router = useRouter()
+  useEffect(() => {
+    if (auth?.user) {
+      router.push("/home");
+    }
+  }, [auth?.user]);
   return (
     <ThemedView style={styles.background_main}>
       <>
@@ -21,13 +29,12 @@ const Signup = ({ navigation }: any) => {
           initialValues={{
             id: "",
             pass: "",
-            cpass: "",
           }}
-          onSubmit={(values) => {
-            if (values.cpass === values.pass) {
-              auth?.putIdPass(values.id, values.pass);
+          onSubmit={async (values) => {
+            const res = await auth?.login(values.id, values.pass);
+            if(res && res.id){
+                router.push('/home')
             }
-            // auth?.signIn(values.id, values.pass);
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -36,9 +43,8 @@ const Signup = ({ navigation }: any) => {
                 <ThemedView style={[styles.searchBar]}>
                   <TextInput
                     style={styles.input}
-                    placeholder={"Enter username"}
+                    placeholder={"Your ID"}
                     value={values.id}
-                    autoCapitalize="none"
                     onChangeText={handleChange("id")}
                     placeholderTextColor={"grey"}
                   />
@@ -48,44 +54,28 @@ const Signup = ({ navigation }: any) => {
                 <ThemedView style={[styles.searchBar]}>
                   <TextInput
                     style={styles.input}
-                    placeholder={"Enter Password"}
+                    placeholder={"Your Password"}
                     value={values.pass}
                     secureTextEntry
-                    autoCapitalize="none"
                     onChangeText={handleChange("pass")}
-                    placeholderTextColor={"grey"}
-                  />
-                </ThemedView>
-              </ThemedView>
-              <ThemedView style={[styles.container]}>
-                <ThemedView style={[styles.searchBar]}>
-                  <TextInput
-                    style={styles.input}
-                    placeholder={"Confirm Password"}
-                    value={values.cpass}
-                    secureTextEntry
-                    autoCapitalize="none"
-                    onChangeText={handleChange("cpass")}
                     placeholderTextColor={"grey"}
                   />
                 </ThemedView>
               </ThemedView>
               <ThemedText
                 style={{
-                  color: "white",
-                  textAlign: "center",
                   marginBottom: 25,
                   fontSize: 14,
                 }}
               >
-                Already have an Account ?
+                Dont Have an Account ?
                 <ThemedText
                   style={{ color: "cyan" }}
                   onPress={() => {
-                    navigation.navigate("(login)");
+                    router.push("/auth/signup");
                   }}
                 >
-                  {"  "}Log In
+                  {"  "}Sign Up
                 </ThemedText>
               </ThemedText>
               <ThemedView style={[styles.container]}>
@@ -105,10 +95,9 @@ const Signup = ({ navigation }: any) => {
                       color: "#fefefe",
                       fontSize: 18,
                       textAlign: "center",
-                      
                     }}
                   >
-                    Sign Up
+                    Login
                   </ThemedText>
                 </TouchableOpacity>
               </ThemedView>
@@ -120,7 +109,7 @@ const Signup = ({ navigation }: any) => {
   );
 };
 
-export default Signup;
+export default Login;
 
 const styles = StyleSheet.create({
   container: {

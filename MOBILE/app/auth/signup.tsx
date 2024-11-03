@@ -7,14 +7,15 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Formik } from "formik";
-import { useAppContext } from "../context";
 import { ThemedView } from "@/components/ThemedView";
+import { Formik } from "formik";
+import { useAppContext } from "@/lib/context";
 import { ThemedText } from "@/components/ThemedText";
-import axios from "axios";
-import { base_url } from "@/constants/Urls";
-const Login = ({ navigation }: any) => {
+import { useRouter } from "expo-router";
+
+const Signup = ({ navigation }: any) => {
   const auth = useAppContext();
+  const router = useRouter();
   return (
     <ThemedView style={styles.background_main}>
       <>
@@ -22,9 +23,13 @@ const Login = ({ navigation }: any) => {
           initialValues={{
             id: "",
             pass: "",
+            cpass: "",
           }}
           onSubmit={(values) => {
-            auth?.login(values.id, values.pass);
+            if (values.cpass === values.pass) {
+              auth?.putIdPass(values.id, values.pass);
+            }
+            // auth?.signIn(values.id, values.pass);
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values }) => (
@@ -33,8 +38,9 @@ const Login = ({ navigation }: any) => {
                 <ThemedView style={[styles.searchBar]}>
                   <TextInput
                     style={styles.input}
-                    placeholder={"Your ID"}
+                    placeholder={"Enter username"}
                     value={values.id}
+                    autoCapitalize="none"
                     onChangeText={handleChange("id")}
                     placeholderTextColor={"grey"}
                   />
@@ -44,28 +50,44 @@ const Login = ({ navigation }: any) => {
                 <ThemedView style={[styles.searchBar]}>
                   <TextInput
                     style={styles.input}
-                    placeholder={"Your Password"}
+                    placeholder={"Enter Password"}
                     value={values.pass}
                     secureTextEntry
+                    autoCapitalize="none"
                     onChangeText={handleChange("pass")}
+                    placeholderTextColor={"grey"}
+                  />
+                </ThemedView>
+              </ThemedView>
+              <ThemedView style={[styles.container]}>
+                <ThemedView style={[styles.searchBar]}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder={"Confirm Password"}
+                    value={values.cpass}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    onChangeText={handleChange("cpass")}
                     placeholderTextColor={"grey"}
                   />
                 </ThemedView>
               </ThemedView>
               <ThemedText
                 style={{
+                  color: "white",
+                  textAlign: "center",
                   marginBottom: 25,
                   fontSize: 14,
                 }}
               >
-                Dont Have an Account ?
+                Already have an Account ?
                 <ThemedText
                   style={{ color: "cyan" }}
                   onPress={() => {
-                    navigation.navigate("(signup)");
+                    router.push("/auth/login");
                   }}
                 >
-                  {"  "}Sign Up
+                  {"  "}Log In
                 </ThemedText>
               </ThemedText>
               <ThemedView style={[styles.container]}>
@@ -85,9 +107,10 @@ const Login = ({ navigation }: any) => {
                       color: "#fefefe",
                       fontSize: 18,
                       textAlign: "center",
+                      
                     }}
                   >
-                    Login
+                    Sign Up
                   </ThemedText>
                 </TouchableOpacity>
               </ThemedView>
@@ -99,7 +122,7 @@ const Login = ({ navigation }: any) => {
   );
 };
 
-export default Login;
+export default Signup;
 
 const styles = StyleSheet.create({
   container: {
