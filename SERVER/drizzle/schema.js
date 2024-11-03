@@ -13,12 +13,20 @@ export const verificationEnum = pgEnum("verification_status", [
   "banned",
   "pass",
   "fail",
+  "waiting"
 ]);
 export const expenseTypeEnum = pgEnum("expense_type", ["spent", "received"]);
 export const senderType = pgEnum("sender_type", ["user", "bot"]);
-export const tokenTypeEnum = pgEnum('token_type', ['access', 'refresh', 'password_reset']);
-export const goalType = pgEnum('goal_type', ['access', 'refresh', 'password_reset']);
-
+export const tokenTypeEnum = pgEnum("token_type", [
+  "access",
+  "refresh",
+  "password_reset",
+]);
+export const goalType = pgEnum("goal_type", [
+  "access",
+  "refresh",
+  "password_reset",
+]);
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -26,7 +34,16 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   userType: userTypeEnum("user_enum"),
   password: text("password").notNull(),
-  verificationStatus: verificationEnum("verification_status"),
+  verificationStatus: verificationEnum("verification_status").default("waiting"),
+});
+
+export const userDocs = pgTable("user_docs", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  identityDoc: text("identity_doc").notNull(),
+  accountDoc: text("account_doc").notNull(),
 });
 
 export const family = pgTable("family", {
@@ -57,7 +74,7 @@ export const userGoals = pgTable("user_goals", {
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
-  goalType: goalType('goal_type'),
+  goalType: goalType("goal_type"),
   success: boolean("success"),
   amount: integer("amount").notNull(),
   reward: text("reward"),
@@ -78,10 +95,10 @@ export const auth = pgTable("auth", {
   id: serial("id").primaryKey(),
   userId: integer("user_id")
     .notNull()
-    .references(() => users.id),  // Foreign key to `users` table
-  token: text("token").notNull().unique(),  // Stores the token value
-  tokenType: tokenTypeEnum("token_type").notNull(),  // Token type, e.g., "access", "refresh", or "password_reset"
-  createdAt: timestamp("created_at").defaultNow().notNull(),  // Timestamp for when the token was created
-  expiresAt: timestamp("expires_at").notNull(),  // Expiration timestamp
-  isRevoked: boolean("is_revoked").default(false).notNull()  // Marks if the token is revoked
+    .references(() => users.id), // Foreign key to `users` table
+  token: text("token").notNull().unique(), // Stores the token value
+  tokenType: tokenTypeEnum("token_type").notNull(), // Token type, e.g., "access", "refresh", or "password_reset"
+  createdAt: timestamp("created_at").defaultNow().notNull(), // Timestamp for when the token was created
+  expiresAt: timestamp("expires_at").notNull(), // Expiration timestamp
+  isRevoked: boolean("is_revoked").default(false).notNull(), // Marks if the token is revoked
 });

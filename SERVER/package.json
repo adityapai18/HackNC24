@@ -16,7 +16,9 @@
     "esm": "^3.2.25",
     "express": "^4.21.1",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "react-native-chart-kit": "^6.12.0",
+    "react-native-progress": "^5.0.1"
   },
   "devDependencies": {
     "@types/pg": "^8.11.10",
